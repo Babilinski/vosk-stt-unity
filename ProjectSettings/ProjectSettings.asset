@@ -47,7 +47,7 @@ PlayerSettings:
   defaultScreenWidthWeb: 960
   defaultScreenHeightWeb: 600
   m_StereoRenderingPath: 0
-  m_ActiveColorSpace: 0
+  m_ActiveColorSpace: 1
   m_MTRendering: 1
   mipStripping: 0
   numberOfMipsStripped: 0
@@ -673,7 +673,20 @@ PlayerSettings:
   webGLLinkerTarget: 1
   webGLThreadsSupport: 0
   webGLDecompressionFallback: 0
-  scriptingDefineSymbols: {}
+  scriptingDefineSymbols:
+    1: MAGICLEAP
+    7: MAGICLEAP
+    13: MAGICLEAP
+    14: MAGICLEAP
+    19: MAGICLEAP
+    21: MAGICLEAP
+    25: MAGICLEAP
+    27: MAGICLEAP
+    28: MAGICLEAP
+    29: MAGICLEAP
+    30: MAGICLEAP
+    32: MAGICLEAP
+    33: MAGICLEAP
   additionalCompilerArguments: {}
   platformArchitecture: {}
   scriptingBackend:
@@ -756,7 +769,7 @@ PlayerSettings:
     m_ModelFolderPath: 
     m_PortalFolderPath: 
   luminCert:
-    m_CertPath: 
+    m_CertPath: C:/Users/kbabi/Documents/MagicLeap/DeveloperKeys/privatekey/smiledpinguin-devrel.cert
     m_SignPackage: 1
   luminIsChannelApp: 0
   luminVersion:

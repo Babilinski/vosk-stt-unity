@@ -1,0 +1,21 @@
+{
+    "name": "ababilinski.MagicLeapSetupTool.Editor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:e40ba710768534012815d3193fa296cb",
+        "GUID:ec0144320e2ab8c42b9ce084651ff2a1",
+        "GUID:28d8685fae23c21419ef42894cb9b075",
+        "GUID:f9fe0089ec81f4079af78eb2287a6163"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
