@@ -1,0 +1,131 @@
+{
+    "m_SelectedDeviceId": "8AQX0X9SV",
+    "m_SelectedPackage": {
+        "deviceId": "8AQX0X9SV",
+        "name": "com.kbabilinski.voskspeech",
+        "processId": 5751,
+        "exited": false
+    },
+    "m_SelectedPriority": 0,
+    "m_KnownPackagesForSerialization": [
+        {
+            "deviceId": "8AQX0X9SV",
+            "name": "com.kbabilinski.voskspeech",
+            "processId": 13181,
+            "exited": true
+        },
+        {
+            "deviceId": "8AQX0X9SV",
+            "name": "com.google.android.apps.nexuslauncher",
+            "processId": 18011,
+            "exited": false
+        },
+        {
+            "deviceId": "8AQX0X9SV",
+            "name": "com.kbabilinski.voskspeech",
+            "processId": 16613,
+            "exited": true
+        },
+        {
+            "deviceId": "8AQX0X9SV",
+            "name": "com.kbabilinski.voskspeech",
+            "processId": 19772,
+            "exited": true
+        },
+        {
+            "deviceId": "8AQX0X9SV",
+            "name": "com.kbabilinski.voskspeech",
+            "processId": 4302,
+            "exited": true
+        },
+        {
+            "deviceId": "8AQX0X9SV",
+            "name": "com.kbabilinski.voskspeech",
+            "processId": 19470,
+            "exited": true
+        },
+        {
+            "deviceId": "8AQX0X9SV",
+            "name": "com.kbabilinski.voskspeech",
+            "processId": 20136,
+            "exited": false
+        },
+        {
+            "deviceId": "8AQX0X9SV",
+            "name": "com.kbabilinski.voskspeech",
+            "processId": 9886,
+            "exited": false
+        },
+        {
+            "deviceId": "8AQX0X9SV",
+            "name": "com.kbabilinski.voskspeech",
+            "processId": 11052,
+            "exited": false
+        },
+        {
+            "deviceId": "8AQX0X9SV",
+            "name": "com.kbabilinski.voskspeech",
+            "processId": 3481,
+            "exited": false
+        },
+        {
+            "deviceId": "8AQX0X9SV",
+            "name": "com.kbabilinski.voskspeech",
+            "processId": 5751,
+            "exited": false
+        }
+    ],
+    "m_Tags": {
+        "m_Entries": [
+            {
+                "m_Name": "Filter by all listed tags",
+                "m_Selected": false
+            },
+            {
+                "m_Name": "No Filter",
+                "m_Selected": true
+            },
+            {
+                "m_Name": "",
+                "m_Selected": false
+            },
+            {
+                "m_Name": "Tag Control...",
+                "m_Selected": false
+            },
+            {
+                "m_Name": "",
+                "m_Selected": false
+            },
+            {
+                "m_Name": "Unity",
+                "m_Selected": false
+            },
+            {
+                "m_Name": "CRASH",
+                "m_Selected": false
+            }
+        ]
+    },
+    "m_MemoryViewerState": {
+        "MemoryWindowHeight": 300.0,
+        "MemoryWindowWidth": 170.0,
+        "MemoryTypeEnabled": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true
+        ],
+        "MemoryGroup": 2,
+        "Behavior": 0
+    },
+    "m_Filter": "",
+    "m_FilterIsRegularExpression": false,
+    "m_SymbolPaths": []
+}
