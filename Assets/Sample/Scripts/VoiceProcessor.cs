@@ -93,17 +93,21 @@ public class VoiceProcessor : MonoBehaviour
         }
     }
 
+    [Header("Voice Detection Settings")]
     [SerializeField, Tooltip("The minimum volume to detect voice input for"), Range(0.0f, 1.0f)]
     private float _minimumSpeakingSampleValue = 0.05f;
 
-    [Header("Voice Detection Settings")]
     [SerializeField, Tooltip("Time in seconds of detected silence before voice request is sent")]
     private float _silenceTimer = 1.0f;
 
+    [SerializeField, Tooltip("Auto detect speech using the volume threshold.")]
+    private bool _autoDetect;
+
     private float _timeAtSilenceBegan;
     private bool _audioDetected;
-    private bool _autoDetect;
     private bool _didDetect;
+    private bool _transmit;
+
 
     AudioClip _audioClip;
     private event Action RestartRecording;
@@ -177,9 +181,12 @@ public class VoiceProcessor : MonoBehaviour
     /// <param name="sampleRate">Sample rate to record at</param>
     /// <param name="frameSize">Size of audio frames to be delivered</param>
     /// <param name="autoDetect">Should the audio continuously record based on the volume</param>
-    public void StartRecording(int sampleRate = 16000, int frameSize = 512, bool autoDetect = true)
+    public void StartRecording(int sampleRate = 16000, int frameSize = 512, bool ?autoDetect = null)
     {
-        _autoDetect = autoDetect;
+        if (autoDetect != null)
+        {
+            _autoDetect = (bool) autoDetect;
+        }
 
         if (IsRecording)
         {
@@ -271,7 +278,7 @@ public class VoiceProcessor : MonoBehaviour
             startReadPos = endReadPos % _audioClip.samples;
             if (_autoDetect == false)
             {
-                _audioDetected = true;
+                _transmit =_audioDetected = true;
             }
             else
             {
@@ -287,11 +294,13 @@ public class VoiceProcessor : MonoBehaviour
 
                 if (maxVolume >= _minimumSpeakingSampleValue)
                 {
-                    _audioDetected = true;
+                    _transmit= _audioDetected = true;
                     _timeAtSilenceBegan = Time.time;
                 }
                 else
                 {
+                    _transmit = false;
+
                     if (_audioDetected && Time.time - _timeAtSilenceBegan > _silenceTimer)
                     {
                         _audioDetected = false;
@@ -310,7 +319,7 @@ public class VoiceProcessor : MonoBehaviour
                 }
 
                 // raise buffer event
-                if (OnFrameCaptured != null)
+                if (OnFrameCaptured != null && _transmit)
                     OnFrameCaptured.Invoke(pcmBuffer);
             }
             else

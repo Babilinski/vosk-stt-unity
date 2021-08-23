@@ -23,6 +23,9 @@ public class VoskSpeechToText : MonoBehaviour
     [Tooltip("The Max number of alternatives that will be processed.")]
     public int MaxAlternatives = 3;
 
+    [Tooltip("How long should we record before restarting?")]
+    public float MaxRecordLength = 5;
+
     [Tooltip("Should the recognizer start when the application is launched?")]
     public bool AutoStart = true;
 
@@ -63,17 +66,25 @@ public class VoskSpeechToText : MonoBehaviour
     //Flag that is used to check if Vosk was started.
     private bool _didInit;
 
+    private float _startRecordTime;
+
     //Threading Logic
+
     //Lock for the string result
-    private object _resultLock = new object();
+    private readonly object _resultLock = new object();
+
     //The json string that was returned from Vosk
     private string _threadedRecognitionResult;
+
     //The result that was called in the Recognition event.
     private string _result;
+
     //Thread safe queue of microphone data.
     private readonly ConcurrentQueue<short[]> _threadedBufferQueue = new ConcurrentQueue<short[]>();
+
     //lock for StreamingIsBusy flag.
     private int _threadSafeBoolBackValue = 0;
+
     //Flag to see if we are processing speech to text data.
     public bool StreamingIsBusy
     {
@@ -85,6 +96,10 @@ public class VoskSpeechToText : MonoBehaviour
         }
     }
 
+    static readonly ProfilerMarker voskRecognizerCreateMarker = new ProfilerMarker("VoskRecognizer.Create");
+    static readonly ProfilerMarker voskRecognizerReadMarker = new ProfilerMarker("VoskRecognizer.AcceptWaveform");
+
+    //If Auto start is enabled, starts vosk speech to text.
     void Start()
     {
         if (AutoStart)
@@ -93,7 +108,14 @@ public class VoskSpeechToText : MonoBehaviour
         }
     }
 
-    public void StartVoskStt( List<string> keyPhrases= null, string modelPath = default, bool startMicrophone = true, int maxAlternatives = 3)
+    /// <summary>
+    /// Start Vosk Speech to text
+    /// </summary>
+    /// <param name="keyPhrases">A list of keywords/phrases. Keywords need to exist in the models dictionary, so some words like "webview" are better detected as two more common words "web view".</param>
+    /// <param name="modelPath">The path to the model folder relative to StreamingAssets. If the path has a .zip ending, it will be decompressed into the application data persistent folder.</param>
+    /// <param name="startMicrophone">"Should the microphone after vosk initializes?</param>
+    /// <param name="maxAlternatives">The maximum number of alternative phrases detected</param>
+    public void StartVoskStt( List<string> keyPhrases= null, string modelPath = default, bool startMicrophone = false, int maxAlternatives = 3)
     {
         if (_isInitializing)
         {
@@ -120,6 +142,7 @@ public class VoskSpeechToText : MonoBehaviour
         StartCoroutine(DoStartVoskStt(startMicrophone));
     }
 
+    //Decompress model, load settings, start Vosk and optionally start the microphone
     private IEnumerator DoStartVoskStt(bool startMicrophone)
     {
         _isInitializing = true;
@@ -133,7 +156,7 @@ public class VoskSpeechToText : MonoBehaviour
     
         yield return null;
 
-        OnStatusUpdated?.Invoke("Listening");
+        OnStatusUpdated?.Invoke("Initialized");
         VoiceProcessor.OnFrameCaptured += VoiceProcessorOnOnFrameCaptured;
         VoiceProcessor.OnRecordingStop += VoiceProcessorOnOnRecordingStop;
        
@@ -142,9 +165,9 @@ public class VoskSpeechToText : MonoBehaviour
 
         _isInitializing = false;
         _didInit = true;
-
     }
 
+    //Translates the KeyPhraseses into a json array and appends the `[unk]` keyword at the end to tell vosk to filter other phrases.
     private void UpdateGrammar()
     {
         if (KeyPhrases.Count == 0)
@@ -243,31 +266,20 @@ public class VoskSpeechToText : MonoBehaviour
             yield return null;
     }
 
-    //Callback from the voice processor when new audio is detected
-    private void VoiceProcessorOnOnFrameCaptured(short[] samples)
+    //Can be called from a script or a GUI button to start detection.
+    public void ToggleRecording()
     {
-        //Only change the state if we are starting fresh
-        if(StreamingIsBusy == false && _buffer.Count==0)
-            OnStatusUpdated?.Invoke("Listening");
-
-        _buffer.AddRange(samples);
+        if (!VoiceProcessor.IsRecording)
+        {
+            VoiceProcessor.StartRecording();
+        }
+        else
+        {
+            VoiceProcessor.StopRecording();
+        }
     }
 
-    //Callback from the voice processor when recording stops
-    private void VoiceProcessorOnOnRecordingStop()
-    {
-        if (StreamingIsBusy)
-            return;
-        
-        OnStatusUpdated?.Invoke("Fetching Result");
-        StreamingIsBusy = true;
-
-        _threadedBufferQueue.Enqueue(_buffer.ToArray());
-        Task.Run(ThreadedWork).ConfigureAwait(false);
-
-        _buffer.Clear();
-    }
-
+    //Calls the On Phrase Recognized event on the Unity Thread
     void Update()
     {
         lock (_resultLock)
@@ -281,6 +293,43 @@ public class VoskSpeechToText : MonoBehaviour
         }
     }
 
+    //Callback from the voice processor when new audio is detected
+    private void VoiceProcessorOnOnFrameCaptured(short[] samples)
+    {
+        //Only change the state if we are starting fresh
+        if (StreamingIsBusy == false && _buffer.Count == 0)
+        {
+            _startRecordTime = Time.time;
+            OnStatusUpdated?.Invoke("Listening");
+        }
+
+        if (Time.time - _startRecordTime > MaxRecordLength)
+        {
+            VoiceProcessorOnOnRecordingStop();
+            return;
+        }
+        else
+        {
+            _buffer.AddRange(samples);
+        }
+
+    }
+
+    //Callback from the voice processor when recording stops
+    private void VoiceProcessorOnOnRecordingStop()
+    {
+        if (StreamingIsBusy)
+            return;
+
+        OnStatusUpdated?.Invoke("Fetching Result");
+        StreamingIsBusy = true;
+        _threadedBufferQueue.Enqueue(_buffer.ToArray());
+        Task.Run(ThreadedWork).ConfigureAwait(false);
+
+        _buffer.Clear();
+    }
+   
+    //Feeds the autio logic into the vosk recorgnizer
     private async Task ThreadedWork()
     {
         StreamingIsBusy = true;
@@ -310,36 +359,27 @@ public class VoskSpeechToText : MonoBehaviour
         voskRecognizerCreateMarker.End();
 
         voskRecognizerReadMarker.Begin();
+
         while (_threadedBufferQueue.Count > 0)
         {
             if (_threadedBufferQueue.TryDequeue(out short[] voiceResult))
             {
-                if (_recognizer.AcceptWaveform(voiceResult, voiceResult.Length))
-                {
+                _recognizer.AcceptWaveform(voiceResult, voiceResult.Length);
                     lock (_resultLock)
                     {
                         _threadedRecognitionResult = _recognizer.Result();
                     }
-                }
-                else
-                {
-                    lock (_resultLock)
-                    {
-                        _threadedRecognitionResult = _recognizer.PartialResult();
-                    }
-                }
             }
         }
        
         voskRecognizerReadMarker.End();
 
+        //We wait 2seconds to avoid getting a partial result when processing audio immediately after.
         await Task.Delay(2000);
- 
         StreamingIsBusy = false;
 
     }
 
-    static readonly ProfilerMarker voskRecognizerCreateMarker = new ProfilerMarker("VoskRecognizer.Create");
-    static readonly ProfilerMarker voskRecognizerReadMarker = new ProfilerMarker("VoskRecognizer.AcceptWaveform");
+  
   
 }
