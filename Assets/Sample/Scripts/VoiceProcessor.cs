@@ -204,6 +204,7 @@ public class VoiceProcessor : MonoBehaviour
             return;
         }
 
+
         SampleRate = sampleRate;
         FrameLength = frameSize;
 

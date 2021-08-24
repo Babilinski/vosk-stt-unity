@@ -9,7 +9,6 @@ using Ionic.Zip;
 using Unity.Profiling;
 using UnityEngine;
 using UnityEngine.Networking;
-using UnityEngine.UI;
 using Vosk;
 
 public class VoskSpeechToText : MonoBehaviour
@@ -296,23 +295,25 @@ public class VoskSpeechToText : MonoBehaviour
     //Callback from the voice processor when new audio is detected
     private void VoiceProcessorOnOnFrameCaptured(short[] samples)
     {
-        //Only change the state if we are starting fresh
-        if (StreamingIsBusy == false && _buffer.Count == 0)
+        if (StreamingIsBusy == false)
         {
-            _startRecordTime = Time.time;
-            OnStatusUpdated?.Invoke("Listening");
-        }
+            //Only change the state if we are starting fresh
+            if (_buffer.Count == 0)
+            {
+                _startRecordTime = Time.time;
+                OnStatusUpdated?.Invoke("Listening");
+            }
 
-        if (Time.time - _startRecordTime > MaxRecordLength)
-        {
-            VoiceProcessorOnOnRecordingStop();
-            return;
+            if (Time.time - _startRecordTime > MaxRecordLength)
+            {
+                VoiceProcessorOnOnRecordingStop();
+                return;
+            }
+            else
+            {
+                _buffer.AddRange(samples);
+            }
         }
-        else
-        {
-            _buffer.AddRange(samples);
-        }
-
     }
 
     //Callback from the voice processor when recording stops

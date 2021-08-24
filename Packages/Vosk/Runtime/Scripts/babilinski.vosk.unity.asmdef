@@ -5,6 +5,7 @@
     "includePlatforms": [
         "Android",
         "Editor",
+        "Lumin",
         "WindowsStandalone64"
     ],
     "excludePlatforms": [],
