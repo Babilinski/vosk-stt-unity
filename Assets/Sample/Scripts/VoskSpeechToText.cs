@@ -19,8 +19,6 @@ public class VoskSpeechToText : MonoBehaviour
     [Tooltip("The source of the microphone input.")]
 
     public VoiceProcessor VoiceProcessor;
-    [Tooltip("The Max number of alternatives that will be processed.")]
-    public int MaxAlternatives = 3;
 
     [Tooltip("How long should we record before restarting?")]
     public float MaxRecordLength = 5;
@@ -114,7 +112,7 @@ public class VoskSpeechToText : MonoBehaviour
     /// <param name="modelPath">The path to the model folder relative to StreamingAssets. If the path has a .zip ending, it will be decompressed into the application data persistent folder.</param>
     /// <param name="startMicrophone">"Should the microphone after vosk initializes?</param>
     /// <param name="maxAlternatives">The maximum number of alternative phrases detected</param>
-    public void StartVoskStt( List<string> keyPhrases= null, string modelPath = default, bool startMicrophone = false, int maxAlternatives = 3)
+    public void StartVoskStt( List<string> keyPhrases= null, string modelPath = default, bool startMicrophone = false)
     {
         if (_isInitializing)
         {
@@ -137,7 +135,6 @@ public class VoskSpeechToText : MonoBehaviour
             KeyPhrases = keyPhrases;
         }
 
-        MaxAlternatives = maxAlternatives;
         StartCoroutine(DoStartVoskStt(startMicrophone));
     }
 
@@ -307,7 +304,6 @@ public class VoskSpeechToText : MonoBehaviour
             if (Time.time - _startRecordTime > MaxRecordLength)
             {
                 VoiceProcessorOnOnRecordingStop();
-                return;
             }
             else
             {
@@ -349,7 +345,7 @@ public class VoskSpeechToText : MonoBehaviour
                 _recognizer = new VoskRecognizer(_model, 16000.0f, _grammar);
             }
 
-            _recognizer.SetMaxAlternatives(MaxAlternatives);
+          //  _recognizer.SetMaxAlternatives(MaxAlternatives);
             _recognizer.SetWords(true);
             _recognizerReady = true;
 

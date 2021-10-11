@@ -54,28 +54,28 @@ MonoBehaviour:
       m_Enabled: 0
       m_Name: DrmCertificates
     - m_ApiLevel: 1
-      m_Enabled: 1
+      m_Enabled: 0
       m_Name: GesturesConfig
     - m_ApiLevel: 1
-      m_Enabled: 1
+      m_Enabled: 0
       m_Name: GesturesSubscribe
     - m_ApiLevel: 6
-      m_Enabled: 1
+      m_Enabled: 0
       m_Name: HandMesh
     - m_ApiLevel: 1
       m_Enabled: 0
       m_Name: IdentityRead
     - m_ApiLevel: 9
-      m_Enabled: 1
+      m_Enabled: 0
       m_Name: ImuCapture
     - m_ApiLevel: 1
       m_Enabled: 0
       m_Name: InAppPurchase
     - m_ApiLevel: 1
-      m_Enabled: 1
+      m_Enabled: 0
       m_Name: Internet
     - m_ApiLevel: 1
-      m_Enabled: 0
+      m_Enabled: 1
       m_Name: LowLatencyLightwear
     - m_ApiLevel: 1
       m_Enabled: 0
@@ -87,7 +87,7 @@ MonoBehaviour:
       m_Enabled: 0
       m_Name: Occlusion
     - m_ApiLevel: 6
-      m_Enabled: 1
+      m_Enabled: 0
       m_Name: PcfRead
     - m_ApiLevel: 6
       m_Enabled: 0
@@ -111,18 +111,18 @@ MonoBehaviour:
       m_Enabled: 0
       m_Name: SocialConnectionsSelectAccess
     - m_ApiLevel: 5
-      m_Enabled: 1
+      m_Enabled: 0
       m_Name: WifiStatusRead
     - m_ApiLevel: 1
-      m_Enabled: 1
+      m_Enabled: 0
       m_Name: WorldReconstruction
   - m_Name: Sensitive
     m_Privileges:
     - m_ApiLevel: 2
-      m_Enabled: 1
+      m_Enabled: 0
       m_Name: AddressBookRead
     - m_ApiLevel: 1
-      m_Enabled: 1
+      m_Enabled: 0
       m_Name: AddressBookWrite
     - m_ApiLevel: 4
       m_Enabled: 0
@@ -131,10 +131,10 @@ MonoBehaviour:
       m_Enabled: 0
       m_Name: Expressions
     - m_ApiLevel: 1
-      m_Enabled: 1
+      m_Enabled: 0
       m_Name: LocalAreaNetwork
     - m_ApiLevel: 8
-      m_Enabled: 1
+      m_Enabled: 0
       m_Name: ObjectData
   - m_Name: Reality
     m_Privileges:
@@ -145,10 +145,10 @@ MonoBehaviour:
       m_Enabled: 0
       m_Name: AudioRecognizer
     - m_ApiLevel: 1
-      m_Enabled: 1
+      m_Enabled: 0
       m_Name: CameraCapture
     - m_ApiLevel: 5
-      m_Enabled: 1
+      m_Enabled: 0
       m_Name: ComputerVision
     - m_ApiLevel: 8
       m_Enabled: 0
@@ -157,7 +157,7 @@ MonoBehaviour:
       m_Enabled: 0
       m_Name: ConnectionVideoCaptureStreaming
     - m_ApiLevel: 7
-      m_Enabled: 1
+      m_Enabled: 0
       m_Name: FineLocation
     - m_ApiLevel: 1
       m_Enabled: 0

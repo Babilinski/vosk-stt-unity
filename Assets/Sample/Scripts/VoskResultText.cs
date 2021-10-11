@@ -22,7 +22,12 @@ public class VoskResultText : MonoBehaviour
                 ResultText.text += "\n ---------- \n";
             }
 
-            ResultText.text += result.Phrases[0].Text + " | " + "Confidence: " + result.Phrases[0].Confidence;
+            var confidence = result.Phrases[0].Confidence != 0 ? " | Confidence: " + Sigmoid(result.Phrases[0].Confidence) : "";
+            ResultText.text += result.Phrases[0].Text + confidence;
         }
+    }
+    public static float Sigmoid(float x)
+    {
+        return (1.0f / (1.0f + Mathf.Exp(-x)));
     }
 }
