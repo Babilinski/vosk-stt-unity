@@ -1,3 +1,7 @@
+# Deprication
+
+This project is no longer supported. Please see the official implementation : "https://github.com/alphacep/vosk-unity-asr"
+
 # About
 
 Implementation of the Vosk offline speech to text (STT) library inside of Unity. I created this just to see if it could be done. Contributions are welcomed!
